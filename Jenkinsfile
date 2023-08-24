@@ -1,4 +1,6 @@
 def registry = 'https://codingadventure.jfrog.io'
+def imageName = 'codingadventure.jfrog.io/codingadventure02-docker-local/ttrend'
+def version   = '2.1.2'
 
 pipeline {
     agent {
@@ -77,5 +79,28 @@ environment {
 				}
 			}   
     	}  
-    }
+
+		stage(" Docker Build ") {
+			steps {
+				script {
+				echo '<--------------- Docker Build Started --------------->'
+				app = docker.build(imageName+":"+version)
+				echo '<--------------- Docker Build Ends --------------->'
+				}
+			}
+		}
+
+		stage (" Docker Publish "){
+			steps {
+				script {
+				echo '<--------------- Docker Publish Started --------------->'  
+					docker.withRegistry(registry, 'JFrog-cred'){
+						app.push()
+					}    
+				echo '<--------------- Docker Publish Ended --------------->'  
+				}
+			}
+		}
+	}
+	
 }
