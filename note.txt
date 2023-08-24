@@ -1,0 +1,5 @@
+delete deployment
+service
+secret
+deployment
+namespace
